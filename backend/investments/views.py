@@ -160,7 +160,6 @@ class CopyTradingViewSet(viewsets.ModelViewSet):
 class CryptoSwapViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
-    @action(detail=False, methods=['post'])
     def create(self, request):
         """Perform crypto swap"""
         try:
