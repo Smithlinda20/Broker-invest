@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Broker Invest</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    /* Dashboard-specific extras */
+    .db-welcome-banner {
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.03));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .db-welcome-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .db-welcome-left p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .db-welcome-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .db-time {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    /* Quick action row */
+    .quick-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .quick-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--navy-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .quick-action-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,168,76,0.06);
+    }
+    .quick-action-btn .qa-icon { font-size: 1.1rem; }
+    /* Investment progress bar */
+    .inv-progress {
+      margin-top: 0.75rem;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .inv-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+    .inv-days-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    /* Plan select card highlight */
+    .plan-card-dashboard.selected {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+    /* Sidebar user profile area */
+    .sidebar-profile {
+      padding: 1.5rem 1.25rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-avatar {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      font-family: 'Playfair Display', serif;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .sidebar-user-info span {
+      font-size: 0.75rem;
+      color: var(--success);
+    }
+    /* Referral share section */
+    .referral-share-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .referral-share-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .referral-share-card:hover {
+      border-color: var(--border);
+      background: rgba(201,168,76,0.05);
+    }
+    .referral-share-card .share-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .referral-share-card span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: block;
+    }
+    /* How withdrawals work steps */
+    .withdraw-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .withdraw-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .withdraw-step-num {
+      width: 28px;
+      height: 28px;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .withdraw-step-text {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      padding-top: 4px;
+      line-height: 1.6;
+    }
+    /* Mobile bottom nav */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--navy-card);
+      border-top: 1px solid var(--border-light);
+      z-index: 200;
+      padding: 8px 0 12px;
+    }
+    .mobile-bottom-nav .mob-nav-items {
+      display: flex;
+      justify-content: space-around;
+    }
+    .mob-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: color 0.3s;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .mob-nav-item .mob-icon { font-size: 1.3rem; }
+    .mob-nav-item.active { color: var(--gold); }
+    @media (max-width: 768px) {
+      .mobile-bottom-nav { display: block; }
+      .dashboard-main { padding: 1.25rem 1rem 80px; }
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+
+  <!-- ======= TOP BAR ======= -->
+  <div class="dashboard-top-bar">
+    <div class="top-bar-content">
+      <div class="top-bar-brand">
+        <img src="/static/images/logo.png" alt="Broker Invest">
+        Broker Invest
+      </div>
+      <div class="top-bar-right">
+        <div class="balance-display" id="balanceDisplay">$0.00</div>
+        <button class="btn" style="padding:8px 16px;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.3);" onclick="goHome()">🏠 Home</button>
+        <button id="logoutBtn" class="btn btn-logout">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= DASHBOARD LAYOUT ======= -->
+  <div class="dashboard-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+        <div class="sidebar-user-info">
+          <h4 id="sidebarUsername">Loading...</h4>
+          <span>● Active Investor</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="dashboard">
+          <span class="icon">📊</span> Overview
+        </a>
+        <a href="#" class="nav-item" data-section="investments">
+          <span class="icon">💰</span> Investments
+        </a>
+        <a href="#" class="nav-item" data-section="withdraw">
+          <span class="icon">💳</span> Withdraw
+        </a>
+        <a href="#" class="nav-item" data-section="referral">
+          <span class="icon">🤝</span> Refer &amp; Earn
+        </a>
+        <a href="#" class="nav-item" data-section="history">
+          <span class="icon">📜</span> History
+        </a>
+        <a href="#" class="nav-item" data-section="settings">
+          <span class="icon">⚙️</span> Settings
+        </a>
+        <a href="#" class="nav-item" data-section="copy-trading">
+          <span class="icon">📊</span> Copy Trading
+        </a>
+        <a href="#" class="nav-item" data-section="swap-crypto">
+          <span class="icon">🔄</span> Swap Crypto
+        </a>
+        <a href="#" class="nav-item" data-section="wallet-import">
+          <span class="icon">🛡️</span> Import Wallet
+        </a>
+      </nav>
+      <div style="padding:1rem 1.25rem;margin-top:auto;">
+        <div style="background:rgba(201,168,76,0.06);border:1px solid var(--border-light);border-radius:var(--radius);padding:1rem;text-align:center;">
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Need help?</p>
+          <a href="#" style="font-size:0.82rem;color:var(--gold);text-decoration:none;font-weight:600;">Contact Support →</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="dashboard-main">
+
+      <!-- ====== OVERVIEW SECTION ====== -->
+      <section id="dashboard-section" class="dashboard-section active">
+
+        <div class="db-welcome-banner">
+          <div class="db-welcome-left">
+            <h1>Welcome back, <span id="username">Investor</span>! 👋</h1>
+            <p>Here's your portfolio performance at a glance</p>
+          </div>
+          <div class="db-welcome-right">
+            <span class="db-time" id="currentDateTime"></span>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="quick-actions">
+          <a class="quick-action-btn" data-section="investments" href="#">
+            <span class="qa-icon">💰</span> New Investment
+          </a>
+          <a class="quick-action-btn" data-section="withdraw" href="#">
+            <span class="qa-icon">💳</span> Withdraw Funds
+          </a>
+          <a class="quick-action-btn" data-section="referral" href="#">
+            <span class="qa-icon">🤝</span> Refer a Friend
+          </a>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="dashboard-grid">
+          <div class="dashboard-card large">
+            <h3>Account Balance</h3>
+            <p class="balance-amount" id="dashboardBalance">$0.00</p>
+            <p class="balance-info">Total Available Funds</p>
+          </div>
+          <div class="dashboard-card">
+            <h3>Active Investments</h3>
+            <p class="card-amount primary" id="activeInvestments">0</p>
+            <p class="card-info">Running Plans</p>
+          </div>
+          <div class="dashboard-card">
+            <h3>Total Earned</h3>
+            <p class="card-amount earned" id="totalEarned">$0.00</p>
+            <p class="card-info">Lifetime Returns</p>
+          </div>
+          <div class="dashboard-card">
+            <h3>Referral Earnings</h3>
+            <p class="card-amount referral" id="referralEarnings">$0.00</p>
+            <p class="card-info">Commission Earned</p>
+          </div>
+        </div>
+
+        <!-- Active Investments List -->
+        <div class="dashboard-section-box">
+          <h2>Your Active Investments</h2>
+          <div id="investmentsList" class="investments-list">
+            <div class="empty-state">
+              <p style="font-size:2rem;margin-bottom:0.5rem;">📊</p>
+              <p>No active investments yet.</p>
+              <a data-section="investments" href="#" style="display:inline-block;margin-top:1rem;" class="btn btn-primary btn-sm">Browse Plans →</a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====== INVESTMENTS SECTION ====== -->
+      <section id="investments-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Investment Plans</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Select a plan and start earning daily returns</p>
+        </div>
+
+        <div class="plans-grid-dashboard" id="plansContainer">
+          <!-- Plans rendered by JS -->
+          <div style="text-align:center;padding:3rem;color:var(--text-muted);grid-column:1/-1;">Loading plans...</div>
+        </div>
+
+        <!-- Investment Form -->
+        <div id="investmentFormContainer" class="investment-form hidden">
+          <h2>Complete Your Investment</h2>
+          <div id="selectedPlanSummary" style="background:rgba(201,168,76,0.06);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;font-size:0.9rem;color:var(--text-secondary);"></div>
+          <form id="investmentForm">
+            <input type="hidden" id="selectedPlanId">
+            <div class="form-group">
+              <label>Investment Amount (USD)</label>
+              <div class="input-icon-group">
+                <span class="input-icon">💵</span>
+                <input type="number" id="investmentAmount" placeholder="Enter amount" required min="1">
+              </div>
+              <span id="amountHint" style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;display:block;"></span>
+            </div>
+            <div class="form-group">
+              <label>Transaction PIN</label>
+              <div class="input-icon-group">
+                <span class="input-icon">🔑</span>
+                <input type="password" id="investmentPin" placeholder="Enter your 4-digit PIN" required maxlength="4" inputmode="numeric">
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+              <button type="submit" class="btn btn-primary" style="flex:1;">Confirm Investment</button>
+              <button type="button" class="btn btn-secondary" onclick="closeInvestmentForm()" style="flex:1;">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ====== WITHDRAWAL SECTION ====== -->
+      <section id="withdraw-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Request Withdrawal</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Processed within 10–30 minutes</p>
+        </div>
+
+        <div class="withdrawal-container">
+          <div class="withdrawal-form-box">
+            <h2>Withdrawal Form</h2>
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.5rem;">Available balance: <strong style="color:var(--gold);" id="withdrawBalance">$0.00</strong></p>
+            <form id="withdrawalForm">
+              <div class="form-group">
+                <label>Withdrawal Method</label>
+                <select id="withdrawalMethod" required>
+                  <option value="">— Select Method —</option>
+                  <option value="crypto">Cryptocurrency</option>
+                  <option value="bank">Bank Transfer</option>
+                </select>
+              </div>
+
+              <!-- Crypto options -->
+              <div id="cryptoOptions" class="form-group hidden">
+                <label>Select Cryptocurrency</label>
+                <div class="crypto-options">
+                  <label>
+                    <input type="radio" name="cryptoType" value="BTC">
+                    <span>₿ Bitcoin (BTC)</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="cryptoType" value="ETH">
+                    <span>Ξ Ethereum (ETH)</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="cryptoType" value="USDT">
+                    <span>₮ Tether (USDT)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Wallet display -->
+              <div id="walletDisplay" class="wallet-display hidden">
+                <h3>Send Payment To This Address:</h3>
+                <div class="wallet-info">
+                  <p><strong style="color:var(--text-primary);">Currency:</strong> <span id="walletCurrency" style="color:var(--gold);font-weight:600;"></span></p>
+                  <p><strong style="color:var(--text-primary);">Network:</strong> <span id="walletNetwork"></span></p>
+                  <div class="wallet-address-box">
+                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;"><strong>Wallet Address:</strong></p>
+                    <div class="address-input">
+                      <input type="text" id="walletAddress" readonly>
+                      <button type="button" class="btn-copy" onclick="copyWalletAddress()">Copy</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bank details -->
+              <div id="bankOptions" class="bank-options hidden">
+                <p style="font-size:0.88rem;font-weight:600;color:var(--gold);margin-bottom:0.75rem;">Bank Account Details</p>
+                <div class="bank-info" id="bankDetails"></div>
+              </div>
+
+              <div class="form-group">
+                <label>Withdrawal Amount (USD)</label>
+                <div class="input-icon-group">
+                  <span class="input-icon">💵</span>
+                  <input type="number" id="withdrawalAmount" placeholder="Enter amount to withdraw" required min="1">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">Request Withdrawal →</button>
+            </form>
+          </div>
+
+          <div class="withdrawal-info-box">
+            <h3>How Withdrawals Work</h3>
+            <div class="withdraw-steps-list">
+              <div class="withdraw-step-item">
+                <div class="withdraw-step-num">1</div>
+                <div class="withdraw-step-text">Select your preferred withdrawal method (crypto or bank)</div>
+              </div>
+              <div class="withdraw-step-item">
+                <div class="withdraw-step-num">2</div>
+                <div class="withdraw-step-text">Choose your cryptocurrency or enter bank details</div>
+              </div>
+              <div class="withdraw-step-item">
+                <div class="withdraw-step-num">3</div>
+                <div class="withdraw-step-text">Enter the amount you wish to withdraw from your balance</div>
+              </div>
+              <div class="withdraw-step-item">
+                <div class="withdraw-step-num">4</div>
+                <div class="withdraw-step-text">Submit your request and receive confirmation</div>
+              </div>
+              <div class="withdraw-step-item">
+                <div class="withdraw-step-num">5</div>
+                <div class="withdraw-step-text">Funds arrive in your wallet within <strong style="color:var(--gold);">10–30 minutes</strong></div>
+              </div>
+            </div>
+            <div style="margin-top:2rem;padding:1rem;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius);">
+              <p style="font-size:0.82rem;color:var(--success);font-weight:600;">⚡ Average processing time: 18 minutes</p>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">Available 24/7 including weekends</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== REFERRAL SECTION ====== -->
+      <section id="referral-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Refer &amp; Earn Program</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Earn 10% commission on every investment your referrals make</p>
+        </div>
+
+        <div class="referral-container">
+          <div class="referral-code-box">
+            <h2>Your Referral Link</h2>
+            <p>Share this unique link with friends and family. When they invest, you earn 10% instantly — no limits.</p>
+            <div class="code-display">
+              <input type="text" id="referralCodeDisplay" readonly>
+              <button class="btn-copy" onclick="copyReferralCode()">Copy</button>
+            </div>
+            <!-- Share buttons -->
+            <div class="referral-share-grid">
+              <div class="referral-share-card" onclick="shareReferral('whatsapp')">
+                <div class="share-icon">💬</div>
+                <span>WhatsApp</span>
+              </div>
+              <div class="referral-share-card" onclick="shareReferral('telegram')">
+                <div class="share-icon">✈️</div>
+                <span>Telegram</span>
+              </div>
+              <div class="referral-share-card" onclick="shareReferral('twitter')">
+                <div class="share-icon">𝕏</div>
+                <span>Twitter</span>
+              </div>
+            </div>
+            <!-- Earnings summary -->
+            <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(201,168,76,0.06);border:1px solid var(--border);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <p style="font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Total Referral Earnings</p>
+                <p class="card-amount referral" id="totalReferralEarnings" style="font-size:1.6rem;margin:4px 0 0;">$0.00</p>
+              </div>
+              <div style="font-size:2rem;">🏆</div>
+            </div>
+          </div>
+
+          <div class="referral-stats">
+            <h2>Your Referrals</h2>
+            <div id="referralsList" class="referrals-list">
+              <div class="empty-state">
+                <p style="font-size:2rem;margin-bottom:0.5rem;">🤝</p>
+                <p>No referrals yet. Share your link to start earning!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== HISTORY SECTION ====== -->
+      <section id="history-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Transaction History</h1>
+        </div>
+        <!-- Filter tabs -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+          <button class="history-filter active" data-filter="all" onclick="filterHistory(this,'all')"
+            style="padding:6px 18px;border-radius:20px;border:1px solid var(--border);background:rgba(201,168,76,0.1);color:var(--gold);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;">All</button>
+          <button class="history-filter" data-filter="investment" onclick="filterHistory(this,'investment')"
+            style="padding:6px 18px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;">Investments</button>
+          <button class="history-filter" data-filter="withdrawal" onclick="filterHistory(this,'withdrawal')"
+            style="padding:6px 18px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;">Withdrawals</button>
+          <button class="history-filter" data-filter="earning" onclick="filterHistory(this,'earning')"
+            style="padding:6px 18px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;">Earnings</button>
+        </div>
+        <div class="history-container">
+          <div id="historyList" class="history-list">
+            <div class="empty-state">
+              <p style="font-size:2rem;margin-bottom:0.5rem;">📜</p>
+              <p>No transactions yet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== SETTINGS SECTION ====== -->
+      <section id="settings-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Account Settings</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Manage your account and preferences</p>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="dashboard-section-box">
+          <h2>Profile Information</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="settingsUsername" readonly style="background:var(--navy-card);cursor:not-allowed;">
+            </div>
+            <div class="form-group">
+              <label>Account Created</label>
+              <input type="text" id="settingsCreatedDate" readonly style="background:var(--navy-card);cursor:not-allowed;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Security Settings</h2>
+          <div style="margin-top:1.5rem;">
+            <div style="padding:1rem;background:rgba(201,168,76,0.06);border:1px solid var(--border-light);border-radius:var(--radius);margin-bottom:1rem;">
+              <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:1rem;">Protect your account by updating your password regularly.</p>
+              <button class="btn btn-primary" onclick="showPasswordResetModal()">Change Password</button>
+            </div>
+            <div style="padding:1rem;background:rgba(124,179,66,0.06);border:1px solid rgba(124,179,66,0.3);border-radius:var(--radius);">
+              <p style="font-size:0.88rem;color:var(--text-secondary);margin-bottom:1rem;"><strong>Transaction PIN:</strong> Your 4-digit PIN is secure and used to confirm investments.</p>
+              <button class="btn btn-secondary" onclick="showPinResetModal()">Update PIN</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Referral Settings -->
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Referral Information</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+            <div class="form-group">
+              <label>Your Referral Code</label>
+              <div style="display:flex;gap:0.5rem;">
+                <input type="text" id="settingsReferralCode" readonly style="flex:1;background:var(--navy-card);cursor:not-allowed;">
+                <button class="btn btn-secondary" onclick="copyReferralCode()" style="padding:10px 15px;">Copy</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Total Referrals</label>
+              <input type="text" id="settingsTotalReferrals" readonly style="background:var(--navy-card);cursor:not-allowed;">
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-top:1rem;">Share your referral code with friends. Earn 10% commission on their investments!</p>
+        </div>
+
+        <!-- Account Actions -->
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Account Actions</h2>
+          <div style="margin-top:1.5rem;">
+            <button class="btn" style="padding:10px 20px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius);cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;" onclick="handleLogout()">
+              🚪 Logout from This Device
+            </button>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.5rem;">You'll be logged out immediately.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== COPY TRADING SECTION ====== -->
+      <section id="copy-trading-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Copy Trading</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Follow top traders and copy their strategies</p>
+        </div>
+
+        <div class="dashboard-section-box">
+          <h2>Available Top Traders</h2>
+          <div id="topTradersContainer" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem;">
+            <div style="text-align:center;padding:2rem;color:var(--text-muted);">Loading top traders...</div>
+          </div>
+        </div>
+
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Your Copy Trading Allocations</h2>
+          <div id="myCopyTradingContainer" style="margin-top:1rem;">
+            <div style="text-align:center;padding:2rem;color:var(--text-muted);">No active copy trading yet</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== SWAP CRYPTO SECTION ====== -->
+      <section id="swap-crypto-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Swap Crypto</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Exchange between BTC, ETH, and USDT instantly</p>
+        </div>
+
+        <div class="dashboard-section-box">
+          <h2>Swap Cryptocurrencies</h2>
+          <form id="swapForm" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;">
+            <div>
+              <label>From Currency</label>
+              <select id="fromCrypto" style="width:100%;padding:10px;border:1px solid var(--border-light);background:var(--navy-card);color:var(--text-primary);border-radius:var(--radius);" required>
+                <option value="">Select currency</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="USDT">Tether (USDT)</option>
+              </select>
+            </div>
+            <div>
+              <label>To Currency</label>
+              <select id="toCrypto" style="width:100%;padding:10px;border:1px solid var(--border-light);background:var(--navy-card);color:var(--text-primary);border-radius:var(--radius);" required>
+                <option value="">Select currency</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="USDT">Tether (USDT)</option>
+              </select>
+            </div>
+            <div>
+              <label>Amount</label>
+              <input type="number" id="swapAmount" step="0.01" min="0" placeholder="Enter amount" required>
+            </div>
+            <div>
+              <label>Estimated You'll Get</label>
+              <input type="text" id="swapReceiveAmount" readonly style="background:var(--navy-card);cursor:not-allowed;">
+            </div>
+            <button type="submit" class="btn btn-primary" style="grid-column:1/2;">Swap Now</button>
+            <div id="swapFeeInfo" style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;color:var(--text-muted);">Fee: 1% (≈ <span id="swapFeeAmount">0</span>)</div>
+          </form>
+        </div>
+
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Swap History</h2>
+          <div id="swapHistoryContainer" style="margin-top:1rem;">
+            <div style="text-align:center;padding:2rem;color:var(--text-muted);">No swap history yet</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== WALLET IMPORTATION SECTION ====== -->
+      <section id="wallet-import-section" class="dashboard-section">
+        <div class="section-header">
+          <h1>Import Wallet</h1>
+          <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">Connect external crypto wallets to your account</p>
+        </div>
+
+        <div class="dashboard-section-box">
+          <h2>Import External Wallet</h2>
+          <form id="importWalletForm" style="display:flex;flex-direction:column;gap:1rem;margin-top:1.5rem;">
+            <div>
+              <label>Wallet Type</label>
+              <select id="importWalletType" style="width:100%;padding:10px;border:1px solid var(--border-light);background:var(--navy-card);color:var(--text-primary);border-radius:var(--radius);" required>
+                <option value="">Select wallet type</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="USDT">Tether (USDT)</option>
+              </select>
+            </div>
+            <div>
+              <label>Wallet Address</label>
+              <input type="text" id="importWalletAddress" placeholder="Paste wallet address here" required>
+            </div>
+            <div>
+              <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">Your wallet will be verified before activation. You'll receive a confirmation.</p>
+              <button type="submit" class="btn btn-primary">Import Wallet</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="dashboard-section-box" style="margin-top:2rem;">
+          <h2>Your Imported Wallets</h2>
+          <div id="importedWalletsContainer" style="margin-top:1rem;">
+            <div style="text-align:center;padding:2rem;color:var(--text-muted);">No imported wallets yet</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ======= PASSWORD RESET MODAL ======= -->
+  <div id="passwordResetModal" class="modal" style="display:none;z-index:1000;">
+    <div class="modal-content" style="max-width:400px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <h2>Change Password</h2>
+        <button onclick="closePasswordResetModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">×</button>
+      </div>
+      <form id="passwordResetForm" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" id="currentPassword" placeholder="Enter current password" required>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" id="newPassword" placeholder="Enter new password (min 4 chars)" required minlength="4">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" id="confirmPassword" placeholder="Confirm new password" required minlength="4">
+        </div>
+        <div style="display:flex;gap:1rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1;">Update Password</button>
+          <button type="button" class="btn btn-secondary" onclick="closePasswordResetModal()" style="flex:1;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======= PIN RESET MODAL ======= -->
+  <div id="pinResetModal" class="modal" style="display:none;z-index:1000;">
+    <div class="modal-content" style="max-width:400px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <h2>Update Transaction PIN</h2>
+        <button onclick="closePinResetModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">×</button>
+      </div>
+      <form id="pinResetForm" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="form-group">
+          <label>Current PIN</label>
+          <input type="password" id="currentPin" placeholder="Enter current PIN" required maxlength="4" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label>New PIN (4 digits)</label>
+          <input type="password" id="newPin" placeholder="Enter new PIN" required maxlength="4" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label>Confirm New PIN</label>
+          <input type="password" id="confirmPin" placeholder="Confirm new PIN" required maxlength="4" inputmode="numeric">
+        </div>
+        <div style="display:flex;gap:1rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1;">Update PIN</button>
+          <button type="button" class="btn btn-secondary" onclick="closePinResetModal()" style="flex:1;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======= MOBILE BOTTOM NAV ======= -->
+  <div class="mobile-bottom-nav">
+    <div class="mob-nav-items">
+      <button class="mob-nav-item active" data-section="dashboard">
+        <span class="mob-icon">📊</span><span>Overview</span>
+      </button>
+      <button class="mob-nav-item" data-section="investments">
+        <span class="mob-icon">💰</span><span>Invest</span>
+      </button>
+      <button class="mob-nav-item" data-section="withdraw">
+        <span class="mob-icon">💳</span><span>Withdraw</span>
+      </button>
+      <button class="mob-nav-item" data-section="referral">
+        <span class="mob-icon">🤝</span><span>Refer</span>
+      </button>
+      <button class="mob-nav-item" data-section="history">
+        <span class="mob-icon">📜</span><span>History</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======= PROCESSING MODAL ======= -->
+  <div id="processingModal" class="modal">
+    <div class="modal-content">
+      <h2>⏳ Processing Withdrawal</h2>
+      <p style="color:var(--text-secondary);margin-bottom:1rem;">Your request has been submitted successfully!</p>
+      <p class="modal-message">Funds will arrive within <strong style="color:var(--gold);">10–30 minutes</strong>.</p>
+      <p class="modal-message">Our automated system is handling your request now.</p>
+      <button class="btn btn-primary" onclick="closeProcessingModal()" style="margin-top:1.5rem;width:100%;">Got it ✓</button>
+    </div>
+  </div>
+
+  <!-- ======= WITHDRAWAL POPUP ======= -->
+  <div id="withdrawalPopup" class="withdrawal-popup hidden">
+    <div class="popup-content">
+      <div class="popup-dot"></div>
+      <p id="popupText"></p>
+    </div>
+    <span class="popup-close" onclick="closeWithdrawalPopup()">&times;</span>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+  <script>
+    // Live clock
+    function updateClock() {
+      const el = document.getElementById('currentDateTime');
+      if (!el) return;
+      const now = new Date();
+      el.textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' })
+        + ' · ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
+
+    // Navigation (sidebar + mobile)
+    function navigateTo(section) {
+      document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item, .mob-nav-item').forEach(n => n.classList.remove('active'));
+      const target = document.getElementById(section + '-section');
+      if (target) target.classList.add('active');
+      document.querySelectorAll(`[data-section="${section}"]`).forEach(n => n.classList.add('active'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('[data-section]').forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        navigateTo(this.dataset.section);
+      });
+    });
+
+    // Sync withdraw balance display
+    function syncWithdrawBalance() {
+      const balEl = document.getElementById('dashboardBalance');
+      const wbalEl = document.getElementById('withdrawBalance');
+      if (balEl && wbalEl) wbalEl.textContent = balEl.textContent;
+    }
+
+    // Referral share
+    function shareReferral(platform) {
+      const link = document.getElementById('referralCodeDisplay').value;
+      const msg = encodeURIComponent(`Join Broker Invest and earn daily returns! Use my referral link: ${link}`);
+      const urls = {
+        whatsapp: `https://wa.me/?text=${msg}`,
+        telegram: `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Join Broker Invest and earn daily returns!')}`,
+        twitter: `https://twitter.com/intent/tweet?text=${msg}`
+      };
+      if (urls[platform]) window.open(urls[platform], '_blank');
+    }
+
+    // History filter
+    function filterHistory(btn, filter) {
+      document.querySelectorAll('.history-filter').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-muted)';
+        b.style.borderColor = 'var(--border-light)';
+      });
+      btn.style.background = 'rgba(201,168,76,0.1)';
+      btn.style.color = 'var(--gold)';
+      btn.style.borderColor = 'var(--border)';
+
+      const items = document.querySelectorAll('.history-item');
+      items.forEach(item => {
+        item.style.display = (filter === 'all' || item.dataset.type === filter) ? '' : 'none';
+      });
+    }
+
+    function closeProcessingModal() {
+      document.getElementById('processingModal').classList.remove('show');
+    }
+
+    function closeWithdrawalPopup() {
+      document.getElementById('withdrawalPopup').classList.add('hidden');
+    }
+
+    // Sync balance to withdraw page on tab click
+    document.querySelectorAll('[data-section="withdraw"]').forEach(el => {
+      el.addEventListener('click', syncWithdrawBalance);
+    });
+    // ─── LOGOUT ───────────────────────────────────────────────
+// Wire this up to your #logoutBtn in dashboard.html
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  try {
+    // ✅ Tell Django to destroy the server-side session
+    await fetch('/api/users/users/logout/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',   // sends the session cookie so Django knows who to log out
+    });
+  } catch (e) {
+    console.warn('Logout API call failed, clearing locally anyway.', e);
+  }
+
+  // Clear localStorage regardless of API result
+  localStorage.removeItem('user');
+  localStorage.removeItem('profile');
+  localStorage.removeItem('token');
+
+  // Redirect to login
+  window.location.href = '/login/';
+});
+
+
+// ─── GUARD: redirect to login if not authenticated ────────
+// Place this near the top of dashboard.js / dashboard.html <script>
+if (!localStorage.getItem('user')) {
+  window.location.href = '/login/';
+}
+  </script>
+</body>
+</html>

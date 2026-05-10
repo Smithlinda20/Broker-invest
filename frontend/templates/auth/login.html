@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Broker Invest</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    html, body { height: auto; min-height: 100vh; overflow-y: auto; }
+    .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  </style>
+</head>
+<body class="auth-page">
+
+  <!-- Background -->
+  <div class="auth-bg">
+    <img src="/static/images/auth-bg.jpg" alt="Finance background">
+    <div class="auth-bg-overlay"></div>
+  </div>
+
+  <!-- Floating particles -->
+  <div class="hero-particles" id="particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+  <div class="auth-container" style="position:relative;z-index:1;">
+    <div class="auth-box">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <img src="/static/images/logo.png" alt="Broker Invest">
+        <span>Broker Invest</span>
+      </div>
+
+      <h1>Welcome Back</h1>
+      <p class="auth-subtitle">Sign in to access your investment dashboard</p>
+
+      <!-- Password Security Warning -->
+      <div style="background:rgba(168,162,158,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:12px;margin-bottom:1.5rem;font-size:0.82rem;color:var(--text-secondary);">
+        <strong style="color:var(--gold);">🔐 Security Tip:</strong> Use a strong, unique password. Store it securely and never share it. If you forgot your password, use the reset option below.
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-icon-group">
+            <span class="input-icon">👤</span>
+            <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-icon-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:-0.25rem;">
+          <a href="#" style="font-size:0.82rem;color:var(--gold);text-decoration:none;" onclick="openForgotPasswordModal(event)">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn" style="margin-top:1rem;">
+          Sign In →
+        </button>
+      </form>
+
+      <div class="auth-divider"><span>New to Broker Invest?</span></div>
+
+      <a href="/register" class="btn btn-secondary btn-block">Create Free Account</a>
+
+      <!-- Trust signals -->
+      <div class="auth-trust">
+        <div class="auth-trust-item">
+          <span>🔒</span>
+          <span>SSL Secured</span>
+        </div>
+        <div class="auth-trust-item">
+          <span>⚡</span>
+          <span>Instant Access</span>
+        </div>
+        <div class="auth-trust-item">
+          <span>🌍</span>
+          <span>90+ Countries</span>
+        </div>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--text-muted);">
+      © 2025 Broker Invest · <a href="#" style="color:var(--text-muted);">Privacy</a> · <a href="#" style="color:var(--text-muted);">Terms</a>
+    </p>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    // Particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const s = document.createElement('span');
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;
+        animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;
+        width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+      container.appendChild(s);
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        showError('Please enter both username and password');
+        return;
+      }
+
+      btn.textContent = 'Signing in...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/api/users/users/login/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem('profile', JSON.stringify(data.profile));
+          localStorage.setItem('token', data.user.id);
+          window.location.href = '/dashboard';
+        } else {
+          showError(data.error || 'Invalid username or password. Please try again.');
+          btn.textContent = 'Sign In →';
+          btn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Connection error: ' + error.message + '. Make sure the server is running.');
+        btn.textContent = 'Sign In →';
+        btn.disabled = false;
+      }
+    });
+
+    function showError(msg) {
+      let err = document.getElementById('authError');
+      if (!err) {
+        err = document.createElement('div');
+        err.id = 'authError';
+        err.style.cssText = 'background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:12px 16px;font-size:0.88rem;color:#ef4444;margin-top:0.5rem;text-align:center;';
+        document.getElementById('loginForm').appendChild(err);
+      }
+      err.textContent = msg;
+    }
+  </script>
+
+  <!-- ======= FORGOT PASSWORD MODAL ======= -->
+  <div id="forgotPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;">
+    <div style="background:var(--navy);border:1px solid var(--border-light);border-radius:12px;padding:2rem;max-width:400px;width:90%;animation:slideUp 0.3s ease;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <h2 style="margin:0;color:var(--gold);">Reset Password</h2>
+        <button onclick="closeForgotPasswordModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-muted);">×</button>
+      </div>
+      
+      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">Enter your username to reset your password. You'll receive instructions via email.</p>
+      
+      <form id="forgotPasswordForm" style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="resetUsername" placeholder="Enter your username" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="resetEmail" placeholder="Enter registered email" required>
+        </div>
+        
+        <div style="background:rgba(124,179,66,0.08);border:1px solid rgba(124,179,66,0.2);border-radius:8px;padding:12px;font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.5rem;">
+          <strong style="color:rgba(124,179,66,1);">⚠️ Important:</strong> For security, remember your new password securely. We recommend using a password manager.
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width:100%;">Send Reset Link</button>
+        <button type="button" class="btn btn-secondary" onclick="closeForgotPasswordModal()" style="width:100%;">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+
+  <script>
+    function openForgotPasswordModal(e) {
+      e.preventDefault();
+      document.getElementById('forgotPasswordModal').style.display = 'flex';
+    }
+    
+    function closeForgotPasswordModal() {
+      document.getElementById('forgotPasswordModal').style.display = 'none';
+      document.getElementById('forgotPasswordForm').reset();
+    }
+    
+    document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('resetUsername').value.trim();
+      const email = document.getElementById('resetEmail').value.trim();
+      
+      if (!username || !email) {
+        alert('Please fill all fields');
+        return;
+      }
+      
+      try {
+        // Check if user exists
+        const response = await fetch('/api/users/users/verify/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email })
+        });
+        
+        if (response.ok) {
+          // Show reset password prompt
+          const newPassword = prompt('🔐 Enter your NEW password (min 4 characters):\n\n⚠️ IMPORTANT: Save this password securely. We cannot recover it if you forget again!');
+          if (!newPassword || newPassword.length < 4) {
+            alert('Password must be at least 4 characters');
+            return;
+          }
+          
+          const confirmPassword = prompt('Confirm your new password:');
+          if (confirmPassword !== newPassword) {
+            alert('Passwords do not match');
+            return;
+          }
+          
+          // Send password reset
+          const resetResponse = await fetch('/api/users/users/reset-password/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, new_password: newPassword })
+          });
+          
+          if (resetResponse.ok) {
+            alert('✅ Password reset successfully! You can now login with your new password.\n\n🔒 Reminder: Store your password securely.');
+            closeForgotPasswordModal();
+            document.getElementById('loginForm').reset();
+            document.getElementById('username').focus();
+          } else {
+            const err = await resetResponse.json();
+            alert('Error: ' + (err.error || 'Password reset failed'));
+          }
+        } else {
+          alert('❌ Username or email not found. Please check and try again.');
+        }
+      } catch (error) {
+        console.error('Reset error:', error);
+        alert('Connection error. Please try again later.');
+      }
+    });
+    
+    // Close modal when clicking outside
+    document.getElementById('forgotPasswordModal').addEventListener('click', (e) => {
+      if (e.target.id === 'forgotPasswordModal') closeForgotPasswordModal();
+    });
+  </script>
+</html>

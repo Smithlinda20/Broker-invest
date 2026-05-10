@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Broker Invest - Premium Investment Platform</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ======= NAVBAR ======= -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="nav-logo">
+        <img src="/static/images/logo.png" alt="Broker Invest Logo">
+        Broker Invest
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home" class="nav-link">Home</a></li>
+        <li><a href="#plans" class="nav-link">Plans</a></li>
+        <li><a href="#how" class="nav-link">How It Works</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="/login" class="nav-link btn-login">Login</a></li>
+        <li><a href="/register" class="nav-link btn-register">Get Started</a></li>
+      </ul>
+      <div class="nav-hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======= HERO ======= -->
+  <section id="home" class="hero">
+    <div class="hero-bg">
+      <img src="/static/images/hero-bg.jpg" alt="Financial background">
+      <div class="hero-bg-overlay"></div>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="hero-particles" id="particles"></div>
+
+    <div class="hero-grid container">
+      <!-- Left content -->
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Trusted by 50,000+ Investors Worldwide
+        </div>
+        <h1 class="hero-title">
+          Grow Your Wealth
+          <span class="highlight">Intelligently.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Broker Invest delivers secure, transparent, and high-yield investment plans — engineered for the modern investor seeking consistent daily returns.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-value" data-count="50">0</span><span class="hero-stat-value">K+</span>
+            <span class="hero-stat-label">Active Investors</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-value">$</span><span class="hero-stat-value" data-count="120">0</span><span class="hero-stat-value">M+</span>
+            <span class="hero-stat-label">Paid Out</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-value" data-count="15">0</span><span class="hero-stat-value">%</span>
+            <span class="hero-stat-label">Max Daily ROI</span>
+          </div>
+        </div>
+        <div class="hero-buttons">
+          <a href="/register" class="btn btn-primary">Start Investing →</a>
+          <a href="#plans" class="btn btn-secondary">View Plans</a>
+        </div>
+      </div>
+
+      <!-- Right visual card -->
+      <div class="hero-visual">
+        <div class="hero-card-main">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Portfolio Performance</div>
+              <div class="chart-value">$24,850.00</div>
+            </div>
+            <div class="chart-change">▲ +12.4%</div>
+          </div>
+          <div class="hero-chart">
+            <div class="chart-bar" style="height:45%"></div>
+            <div class="chart-bar" style="height:62%"></div>
+            <div class="chart-bar" style="height:50%"></div>
+            <div class="chart-bar" style="height:80%"></div>
+            <div class="chart-bar" style="height:68%"></div>
+            <div class="chart-bar" style="height:90%"></div>
+            <div class="chart-bar" style="height:100%"></div>
+          </div>
+          <div class="hero-mini-cards">
+            <div class="hero-mini-card">
+              <div class="mini-card-label">Today's Earnings</div>
+              <div class="mini-card-val">+$372.50</div>
+            </div>
+            <div class="hero-mini-card">
+              <div class="mini-card-label">Active Plan</div>
+              <div class="mini-card-val">Elite — 10%</div>
+            </div>
+          </div>
+        </div>
+        <!-- Floating badges -->
+        <div class="hero-float-badge hero-float-badge-1">
+          <div class="float-badge-icon">✅</div>
+          <div class="float-badge-text">
+            <span class="float-badge-val">Instant Payout</span>
+            <span class="float-badge-label">Processed in 30 min</span>
+          </div>
+        </div>
+        <div class="hero-float-badge hero-float-badge-2">
+          <div class="float-badge-icon">🔐</div>
+          <div class="float-badge-text">
+            <span class="float-badge-val">Bank-Grade Security</span>
+            <span class="float-badge-label">256-bit SSL Encrypted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero-scroll">
+      <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+      <span class="scroll-text">Scroll</span>
+    </div>
+  </section>
+
+  <!-- ======= TRUST LOGOS ======= -->
+  <div class="trust-section">
+    <div class="trust-inner">
+      <p class="trust-label">Featured & Partnered With</p>
+      <div class="trust-logos">
+        <div class="trust-logo">
+          <img src="/static/images/trust-binance.png" alt="Binance">
+          <span>Binance</span>
+        </div>
+        <div class="trust-logo">
+          <img src="/static/images/trust-coinbase.png" alt="Coinbase">
+          <span>Coinbase</span>
+        </div>
+        <div class="trust-logo">
+          <img src="/static/images/trust-paypal.png" alt="PayPal">
+          <span>PayPal</span>
+        </div>
+        <div class="trust-logo">
+          <img src="/static/images/trust-visa.png" alt="Visa">
+          <span>Visa</span>
+        </div>
+        <div class="trust-logo">
+          <img src="/static/images/trust-mastercard.png" alt="Mastercard">
+          <span>Mastercard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= STATS ======= -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">👥</div>
+          <span class="stat-number" data-target="50000">0</span>
+          <span class="stat-label">Active Investors</span>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">💵</div>
+          <span class="stat-number" data-target="120" data-prefix="$" data-suffix="M+">0</span>
+          <span class="stat-label">Total Paid Out</span>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">🌍</div>
+          <span class="stat-number" data-target="90" data-suffix="+">0</span>
+          <span class="stat-label">Countries Served</span>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">⭐</div>
+          <span class="stat-number" data-target="4.9">0</span>
+          <span class="stat-label">Average Rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= HOW IT WORKS ======= -->
+  <section id="how" class="how-section">
+    <div class="container">
+      <div class="how-grid">
+        <div class="how-image">
+          <img src="/static/images/how-it-works.jpg" alt="Investor using platform">
+          <div class="how-image-overlay"></div>
+        </div>
+        <div>
+          <div class="section-tag">How It Works</div>
+          <h2 class="section-title">Investing made simple in 4 steps</h2>
+          <p class="section-subtitle">Start earning in minutes. No experience required — our platform guides you every step of the way.</p>
+          <div class="how-steps">
+            <div class="how-step">
+              <div class="step-number">01</div>
+              <div class="step-content">
+                <h4>Create Your Account</h4>
+                <p>Register in under 2 minutes with just a username and password. No KYC hassle, no waiting periods.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="step-number">02</div>
+              <div class="step-content">
+                <h4>Choose Your Plan</h4>
+                <p>Pick from our 5 investment tiers — from $10 Starter to unlimited Elite plans — based on your goals.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="step-number">03</div>
+              <div class="step-content">
+                <h4>Fund Your Investment</h4>
+                <p>Deposit securely via Bitcoin, Ethereum, USDT, or bank transfer. Funds are credited instantly.</p>
+              </div>
+            </div>
+            <div class="how-step">
+              <div class="step-number">04</div>
+              <div class="step-content">
+                <h4>Earn & Withdraw Daily</h4>
+                <p>Watch your balance grow every day. Withdraw your earnings anytime — processed in 10–30 minutes.</p>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 2rem;">
+            <a href="/register" class="btn btn-primary">Get Started Now →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= INVESTMENT PLANS ======= -->
+  <section id="plans" class="plans-section">
+    <div class="container">
+      <div class="section-header-centered">
+        <div class="section-tag" style="justify-content:center;">Investment Plans</div>
+        <h2 class="section-title">Choose Your Growth Plan</h2>
+        <p class="section-subtitle">Transparent daily returns, zero hidden fees. Every plan includes daily payouts and instant withdrawals.</p>
+      </div>
+
+      <div class="plans-grid">
+        <!-- Starter -->
+        <div class="plan-card">
+          <div class="plan-icon">🌱</div>
+          <div class="plan-badge">STARTER</div>
+          <h3>Starter Plan</h3>
+          <span class="plan-return">3.5% <small>/ day</small></span>
+          <ul class="plan-features">
+            <li>Min: $10 — Max: $1,000</li>
+            <li>Duration: 30 Days</li>
+            <li>Daily Payout</li>
+            <li>Instant Withdrawals</li>
+            <li>24/7 Support</li>
+          </ul>
+          <a href="/register" class="btn btn-plan">Invest Now</a>
+        </div>
+
+        <!-- Professional -->
+        <div class="plan-card featured">
+          <div class="plan-icon">💼</div>
+          <div class="plan-badge">MOST POPULAR</div>
+          <h3>Professional Plan</h3>
+          <span class="plan-return">5% <small>/ day</small></span>
+          <ul class="plan-features">
+            <li>Min: $1,000 — Max: $10,000</li>
+            <li>Duration: 30 Days</li>
+            <li>Daily Payout</li>
+            <li>Priority Withdrawals</li>
+            <li>Dedicated Support</li>
+          </ul>
+          <a href="/register" class="btn btn-plan">Invest Now</a>
+        </div>
+
+        <!-- Premium -->
+        <div class="plan-card">
+          <div class="plan-icon">💎</div>
+          <div class="plan-badge">PREMIUM</div>
+          <h3>Premium Plan</h3>
+          <span class="plan-return">7.5% <small>/ day</small></span>
+          <ul class="plan-features">
+            <li>Min: $5,000 — Max: $50,000</li>
+            <li>Duration: 30 Days</li>
+            <li>Daily Payout</li>
+            <li>Priority Withdrawals</li>
+            <li>Account Manager</li>
+          </ul>
+          <a href="/register" class="btn btn-plan">Invest Now</a>
+        </div>
+
+        <!-- Elite -->
+        <div class="plan-card">
+          <div class="plan-icon">🏆</div>
+          <div class="plan-badge">ELITE</div>
+          <h3>Elite Plan</h3>
+          <span class="plan-return">10% <small>/ day</small></span>
+          <ul class="plan-features">
+            <li>Min: $25,000 — Unlimited</li>
+            <li>Duration: 30 Days</li>
+            <li>Daily Payout</li>
+            <li>VIP Withdrawals</li>
+            <li>Personal Advisor</li>
+          </ul>
+          <a href="/register" class="btn btn-plan">Invest Now</a>
+        </div>
+
+        <!-- VIP -->
+        <div class="plan-card">
+          <div class="plan-icon">👑</div>
+          <div class="plan-badge">VIP</div>
+          <h3>VIP Plan</h3>
+          <span class="plan-return">15% <small>/ day</small></span>
+          <ul class="plan-features">
+            <li>Min: $50,000 — Unlimited</li>
+            <li>Duration: 60 Days</li>
+            <li>Daily Payout</li>
+            <li>Instant Withdrawals</li>
+            <li>Exclusive Concierge</li>
+          </ul>
+          <a href="/register" class="btn btn-plan">Invest Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FEATURES ======= -->
+  <section id="about" class="features-section">
+    <div class="container">
+      <div class="section-header-centered">
+        <div class="section-tag" style="justify-content:center;">Why Broker Invest</div>
+        <h2 class="section-title">Built for Serious Investors</h2>
+        <p class="section-subtitle">Every feature is designed with your financial security and growth in mind.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Bank-Grade Security</h3>
+          <p>256-bit SSL encryption, two-factor authentication, and cold-wallet fund storage keep your assets protected at all times.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Withdrawals</h3>
+          <p>Request a payout at any time. Our automated system processes withdrawals in 10–30 minutes, 24 hours a day, 7 days a week.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Daily Compounding</h3>
+          <p>Reinvest your daily earnings automatically to maximize the power of compound interest and accelerate your portfolio growth.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <h3>Referral Program</h3>
+          <p>Earn a 10% commission on every investment your referrals make. Build a passive income stream with no cap on earnings.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multi-Currency Support</h3>
+          <p>Deposit and withdraw in Bitcoin, Ethereum, USDT, and major bank currencies. Flexibility for investors worldwide.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Real-Time Dashboard</h3>
+          <p>Track your portfolio performance, daily earnings, transaction history, and referral stats all in one elegant dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= TESTIMONIALS ======= -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header-centered">
+        <div class="section-tag" style="justify-content:center;">Testimonials</div>
+        <h2 class="section-title">What Our Investors Say</h2>
+        <p class="section-subtitle">Real stories from real people growing their wealth with Broker Invest.</p>
+      </div>
+    </div>
+    <div class="testimonials-track-wrapper">
+      <div class="testimonials-track" id="testimonialsTrack">
+        <!-- Cards duplicated for infinite scroll -->
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I was skeptical at first, but after my first withdrawal arrived in 20 minutes I was hooked. I've been investing for 8 months now with consistent returns."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-1.jpg" class="testimonial-avatar" alt="James K.">
+            <div class="author-info">
+              <span class="author-name">James K.</span>
+              <span class="author-role">Software Engineer, USA</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$14,820</span>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The Professional Plan has been phenomenal. My $5,000 investment has grown significantly and the daily payouts are always on time."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-2.jpg" class="testimonial-avatar" alt="Amara O.">
+            <div class="author-info">
+              <span class="author-name">Amara O.</span>
+              <span class="author-role">Entrepreneur, Nigeria</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$9,250</span>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The referral program alone pays my monthly bills. I've referred 12 friends and earn passive income on top of my own investment returns."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-3.jpg" class="testimonial-avatar" alt="Lena M.">
+            <div class="author-info">
+              <span class="author-name">Lena M.</span>
+              <span class="author-role">Marketing Director, UK</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$22,100</span>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I started with the Starter plan to test the waters. Within two weeks I upgraded to Premium. The platform is transparent and the support team is responsive."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-4.jpg" class="testimonial-avatar" alt="Carlos R.">
+            <div class="author-info">
+              <span class="author-name">Carlos R.</span>
+              <span class="author-role">Financial Analyst, Brazil</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$6,740</span>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"As a retiree looking for passive income, Broker Invest has been a game changer. Daily returns straight to my wallet without any stress."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-5.jpg" class="testimonial-avatar" alt="Patricia H.">
+            <div class="author-info">
+              <span class="author-name">Patricia H.</span>
+              <span class="author-role">Retired Teacher, Canada</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$31,500</span>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The VIP plan is elite in every sense. My account manager is always available and the returns are truly extraordinary. Highly recommended."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-6.jpg" class="testimonial-avatar" alt="Wei L.">
+            <div class="author-info">
+              <span class="author-name">Wei L.</span>
+              <span class="author-role">Tech Investor, Singapore</span>
+            </div>
+          </div>
+          <div class="testimonial-amount">
+            <span>Total Earned</span>
+            <span>+$58,000</span>
+          </div>
+        </div>
+
+        <!-- Duplicate for seamless loop -->
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I was skeptical at first, but after my first withdrawal arrived in 20 minutes I was hooked. I've been investing for 8 months now with consistent returns."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-1.jpg" class="testimonial-avatar" alt="James K.">
+            <div class="author-info">
+              <span class="author-name">James K.</span>
+              <span class="author-role">Software Engineer, USA</span>
+            </div>
+          </div>
+          <div class="testimonial-amount"><span>Total Earned</span><span>+$14,820</span></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The Professional Plan has been phenomenal. My $5,000 investment has grown significantly and the daily payouts are always on time."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-2.jpg" class="testimonial-avatar" alt="Amara O.">
+            <div class="author-info">
+              <span class="author-name">Amara O.</span>
+              <span class="author-role">Entrepreneur, Nigeria</span>
+            </div>
+          </div>
+          <div class="testimonial-amount"><span>Total Earned</span><span>+$9,250</span></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The referral program alone pays my monthly bills. I've referred 12 friends and earn passive income on top of my own investment returns."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-3.jpg" class="testimonial-avatar" alt="Lena M.">
+            <div class="author-info">
+              <span class="author-name">Lena M.</span>
+              <span class="author-role">Marketing Director, UK</span>
+            </div>
+          </div>
+          <div class="testimonial-amount"><span>Total Earned</span><span>+$22,100</span></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I started with the Starter plan to test the waters. Within two weeks I upgraded to Premium. The platform is transparent and the support team is responsive."</p>
+          <div class="testimonial-author">
+            <img src="/static/images/avatar-4.jpg" class="testimonial-avatar" alt="Carlos R.">
+            <div class="author-info">
+              <span class="author-name">Carlos R.</span>
+              <span class="author-role">Financial Analyst, Brazil</span>
+            </div>
+          </div>
+          <div class="testimonial-amount"><span>Total Earned</span><span>+$6,740</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= SECURITY ======= -->
+  <section class="security-section">
+    <div class="container">
+      <div class="security-grid">
+        <div>
+          <div class="section-tag">Security First</div>
+          <h2 class="section-title">Your Funds are Protected at Every Level</h2>
+          <p class="section-subtitle">We employ multiple layers of institutional-grade security to ensure your investments and personal data remain safe.</p>
+          <div class="security-badges" style="margin-top: 2.5rem;">
+            <div class="security-badge">
+              <div class="security-badge-icon">🔐</div>
+              <h4>256-bit SSL</h4>
+              <p>Military-grade encryption on all data transfers</p>
+            </div>
+            <div class="security-badge">
+              <div class="security-badge-icon">🛡️</div>
+              <h4>Cold Storage</h4>
+              <p>95% of funds stored offline in cold wallets</p>
+            </div>
+            <div class="security-badge">
+              <div class="security-badge-icon">🔑</div>
+              <h4>2FA Protection</h4>
+              <p>Two-factor authentication on all accounts</p>
+            </div>
+            <div class="security-badge">
+              <div class="security-badge-icon">👁️</div>
+              <h4>24/7 Monitoring</h4>
+              <p>Continuous threat detection and monitoring</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <img src="/static/images/security-shield.jpg" alt="Security infrastructure" class="security-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FAQ ======= -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header-centered">
+        <div class="section-tag" style="justify-content:center;">FAQ</div>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know before you start investing.</p>
+      </div>
+      <div class="faq-container">
+        <div class="faq-item open">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How do I get started with Broker Invest?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">Simply create a free account, choose your investment plan, make a deposit using your preferred payment method, and your returns start accruing the same day. The entire process takes under 5 minutes.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>When and how can I withdraw my earnings?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">You can request a withdrawal at any time, 24/7. Withdrawals are processed within 10–30 minutes to your chosen cryptocurrency wallet or bank account. There is no minimum withdrawal waiting period once your plan generates returns.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>What payment methods do you accept?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">We accept Bitcoin (BTC), Ethereum (ETH), USDT (Tether), and direct bank transfers. All transactions are processed securely and your funds are credited to your account instantly upon blockchain confirmation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>How does the referral program work?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">When you refer a friend using your unique referral link and they make an investment, you earn 10% of their investment amount as a commission — credited instantly to your account. There is no cap on how much you can earn through referrals.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Is my investment capital returned after the plan ends?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">Yes. At the end of your investment plan's duration, your original principal is returned to your account balance along with any accrued returns. You can then reinvest or withdraw your full balance.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h4>Can I run multiple investment plans simultaneously?</h4>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="faq-answer">Absolutely. You can invest in multiple plans at the same time to diversify your portfolio and maximize your daily returns. Each plan operates independently and earns its respective daily percentage.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CTA ======= -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="section-tag" style="justify-content:center; margin-bottom: 1.5rem;">Ready to Invest?</div>
+        <h2 class="section-title">Start Earning Daily Returns Today</h2>
+        <p class="section-subtitle">Join 50,000+ investors already growing their wealth with Broker Invest. Takes less than 2 minutes to get started.</p>
+        <div class="cta-buttons">
+          <a href="/register" class="btn btn-primary">Create Free Account →</a>
+          <a href="/login" class="btn btn-secondary">Login to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo">
+            <img src="/static/images/logo.png" alt="Broker Invest">
+            Broker Invest
+          </a>
+          <p class="footer-desc">A premier investment platform delivering secure, transparent, and high-yield returns to investors across 90+ countries.</p>
+          <div class="footer-socials">
+            <a href="#" class="social-btn" title="Twitter">𝕏</a>
+            <a href="#" class="social-btn" title="Telegram">✈</a>
+            <a href="#" class="social-btn" title="Instagram">◉</a>
+            <a href="#" class="social-btn" title="LinkedIn">in</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#plans">Investment Plans</a></li>
+            <li><a href="#how">How It Works</a></li>
+            <li><a href="/register">Get Started</a></li>
+            <li><a href="/login">Login</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <div class="footer-contact-item">
+            <span class="icon">✉</span>
+            <span id="footer-contact">support@brokerinvest.com</span>
+          </div>
+          <div class="footer-contact-item">
+            <span class="icon">💬</span>
+            <span>Live chat: 24/7</span>
+          </div>
+          <div class="footer-contact-item">
+            <span class="icon">📍</span>
+            <span>Registered globally</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="footer-bottom">
+        <span id="footer-text">© 2025 Broker Invest. All rights reserved.</span>
+        <div>
+          <a href="#">Privacy</a> &nbsp;·&nbsp;
+          <a href="#">Terms</a> &nbsp;·&nbsp;
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Live withdrawal popup -->
+  <div id="withdrawalPopup" class="withdrawal-popup hidden">
+    <div class="popup-content">
+      <div class="popup-dot"></div>
+      <p id="popupText"></p>
+    </div>
+    <span class="popup-close" onclick="document.getElementById('withdrawalPopup').classList.add('hidden')">&times;</span>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Hamburger menu
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navMenu').style.display =
+        document.getElementById('navMenu').style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 25; i++) {
+      const s = document.createElement('span');
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;
+        animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;
+        width:${1+Math.random()*3}px;height:${1+Math.random()*3}px;opacity:${0.3+Math.random()*0.5}`;
+      container.appendChild(s);
+    }
+
+    // Counter animation
+    const counters = document.querySelectorAll('.stat-number[data-target]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseFloat(el.dataset.target);
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        const decimals = target % 1 !== 0 ? 1 : 0;
+        let start = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          start = Math.min(start + step, target);
+          el.textContent = prefix + start.toFixed(decimals) + suffix;
+          if (start >= target) clearInterval(timer);
+        }, 25);
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(c => observer.observe(c));
+
+    // FAQ toggle
+    function toggleFAQ(el) {
+      const item = el.parentElement;
+      document.querySelectorAll('.faq-item').forEach(i => { if(i !== item) i.classList.remove('open'); });
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
