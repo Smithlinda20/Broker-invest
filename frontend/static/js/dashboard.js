@@ -2,6 +2,18 @@
 
 const API_BASE_URL = '/api';
 
+// Log user activity for admin dashboard
+async function logActivity(activityType, description, amount = null, planName = null) {
+    try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        // This would be called by backend when processing activities
+        // For now just logging to console
+        console.log(`Activity: ${activityType}`, { description, amount, planName, username: user.username });
+    } catch (error) {
+        console.error('Error logging activity:', error);
+    }
+}
+
 // Initialize dashboard on page load
 document.addEventListener('DOMContentLoaded', function() {
     initializeDashboard();
@@ -18,6 +30,11 @@ async function initializeDashboard() {
 
     // Set username in display
     document.getElementById('username').textContent = user.username;
+    document.getElementById('sidebarUsername').textContent = user.username;
+    
+    // Set avatar initial
+    const initial = user.username ? user.username.charAt(0).toUpperCase() : '?';
+    document.getElementById('sidebarAvatar').textContent = initial;
     
     // Load investment plans
     loadInvestmentPlans();
@@ -114,6 +131,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (response.ok) {
+                    const data = await response.json();
+                    const planName = document.querySelector(`[data-plan-id="${planId}"] .plan-name`)?.textContent || 'Unknown Plan';
+                    
+                    // Log activity for admin dashboard
+                    logActivity('investment', `Investment of $${amount} in ${planName}`, amount, planName);
+                    
                     alert('Investment created successfully!');
                     closeInvestmentForm();
                     loadUserData();

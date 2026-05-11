@@ -2,10 +2,19 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from admin_panel.views import admin_login_view, admin_dashboard_view, admin_logout_view, admin_api_activities, admin_api_confirm_payment, admin_api_reject_payment
 
 urlpatterns = [
     # Frontend pages
     path('', include('broker_platform.urls')),
+    
+    # Admin custom auth
+    path('backend/login/', admin_login_view, name='admin_login'),
+    path('backend/dashboard/', admin_dashboard_view, name='admin_dashboard'),
+    path('backend/logout/', admin_logout_view, name='admin_logout'),
+    path('backend/api/activities/', admin_api_activities, name='admin_api_activities'),
+    path('backend/api/confirm-payment/', admin_api_confirm_payment, name='admin_api_confirm_payment'),
+    path('backend/api/reject-payment/', admin_api_reject_payment, name='admin_api_reject_payment'),
     
     # API endpoints
     path('api/users/', include('users.urls')),
@@ -15,7 +24,7 @@ urlpatterns = [
     path('api/notifications/', include('notifications.urls')),
     
     # Django admin (keep for superuser management)
-    path('backend/admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

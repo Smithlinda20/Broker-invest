@@ -171,6 +171,7 @@ body.auth-page {
   gap: 5px;
   cursor: pointer;
   padding: 5px;
+  z-index: 1100;
 }
 
 .nav-hamburger span {
@@ -180,6 +181,18 @@ body.auth-page {
   background: var(--gold);
   transition: all 0.3s ease;
   border-radius: 2px;
+}
+
+.nav-hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(11px);
+}
+
+.nav-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-11px);
 }
 
 /* ============================================
@@ -2778,7 +2791,32 @@ body.auth-page {
 }
 
 @media (max-width: 768px) {
-  .nav-menu { display: none; }
+  .nav-menu { 
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(10, 15, 30, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    z-index: 1000;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  
+  .nav-menu.active { display: flex; }
+  
+  .nav-menu .nav-link {
+    padding: 12px 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+  
   .nav-hamburger { display: flex; }
 
   .dashboard-layout { grid-template-columns: 1fr; }

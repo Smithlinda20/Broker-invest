@@ -2,8 +2,154 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .models import AdminNotification, PaymentWallet, SiteSettings, PopupNotification
+from django.contrib.auth.hashers import check_password, make_password
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+from django.utils import timezone
+import json
+from .models import AdminUser, AdminNotification, PaymentWallet, SiteSettings, PopupNotification, ActivityLog
 from .serializers import AdminNotificationSerializer, PaymentWalletSerializer, SiteSettingsSerializer, PopupNotificationSerializer
+
+# Admin Session management
+def set_admin_session(request, admin_user):
+    request.session['admin_logged_in'] = True
+    request.session['admin_id'] = str(admin_user.id)
+    request.session['admin_email'] = admin_user.email
+    request.session['admin_name'] = admin_user.name
+    admin_user.last_login = timezone.now()
+    admin_user.save()
+
+def is_admin_authenticated(request):
+    return request.session.get('admin_logged_in', False)
+
+@require_http_methods(["GET", "POST"])
+@csrf_exempt
+def admin_login_view(request):
+    """Custom admin login page"""
+    if request.method == 'GET':
+        if is_admin_authenticated(request):
+            return redirect('admin_dashboard')
+        return render(request, 'admin/login.html')
+    
+    # POST request
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        
+        admin = AdminUser.objects.filter(email=email, is_active=True).first()
+        
+        if not admin:
+            return JsonResponse({'error': 'Invalid email or password'}, status=401)
+        
+        # Check password
+        if not check_password(password, admin.password):
+            return JsonResponse({'error': 'Invalid email or password'}, status=401)
+        
+        # Set session
+        set_admin_session(request, admin)
+        
+        return JsonResponse({
+            'message': 'Login successful',
+            'admin_name': admin.name
+        }, status=200)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_http_methods(["GET"])
+def admin_dashboard_view(request):
+    """Custom admin dashboard"""
+    if not is_admin_authenticated(request):
+        return redirect('admin_login')
+    
+    context = {
+        'admin_name': request.session.get('admin_name', 'Admin'),
+    }
+    return render(request, 'admin/dashboard.html', context)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def admin_logout_view(request):
+    """Admin logout"""
+    request.session.flush()
+    return JsonResponse({'message': 'Logged out successfully'}, status=200)
+
+@require_http_methods(["GET"])
+@csrf_exempt
+def admin_api_activities(request):
+    """Get all activities for admin"""
+    if not is_admin_authenticated(request):
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    
+    activity_type = request.GET.get('type', '')
+    status_filter = request.GET.get('status', '')
+    
+    activities = ActivityLog.objects.all()
+    
+    if activity_type:
+        activities = activities.filter(activity_type=activity_type)
+    if status_filter:
+        activities = activities.filter(status=status_filter)
+    
+    data = [{
+        'id': str(a.id),
+        'username': a.username,
+        'email': a.user_email,
+        'activity_type': a.activity_type,
+        'description': a.description,
+        'amount': str(a.amount) if a.amount else None,
+        'plan': a.plan_name,
+        'status': a.status,
+        'created_at': a.created_at.isoformat(),
+    } for a in activities[:50]]
+    
+    return JsonResponse(data, safe=False)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def admin_api_confirm_payment(request):
+    """Confirm pending payment"""
+    if not is_admin_authenticated(request):
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        activity_id = data.get('activity_id')
+        
+        activity = ActivityLog.objects.get(id=activity_id)
+        activity.status = 'confirmed'
+        activity.save()
+        
+        return JsonResponse({'message': 'Payment confirmed'}, status=200)
+    except ActivityLog.DoesNotExist:
+        return JsonResponse({'error': 'Activity not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def admin_api_reject_payment(request):
+    """Reject pending payment"""
+    if not is_admin_authenticated(request):
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    
+    try:
+        data = json.loads(request.body)
+        activity_id = data.get('activity_id')
+        
+        activity = ActivityLog.objects.get(id=activity_id)
+        activity.status = 'rejected'
+        activity.save()
+        
+        return JsonResponse({'message': 'Payment rejected'}, status=200)
+    except ActivityLog.DoesNotExist:
+        return JsonResponse({'error': 'Activity not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 class AdminNotificationViewSet(viewsets.ModelViewSet):
     queryset = AdminNotification.objects.all()

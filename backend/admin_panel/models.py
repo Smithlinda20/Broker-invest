@@ -73,3 +73,60 @@ class PopupNotification(models.Model):
     
     def __str__(self):
         return f"{self.username} withdrew {self.amount}"
+
+
+class AdminUser(models.Model):
+    """Custom Admin User Model"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)  # Should be hashed
+    name = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.name} ({self.email})"
+
+
+class ActivityLog(models.Model):
+    """Track all user activities"""
+    ACTIVITY_TYPES = [
+        ('registration', 'User Registration'),
+        ('login', 'User Login'),
+        ('investment', 'Investment Created'),
+        ('payment_pending', 'Payment Pending'),
+        ('payment_confirmed', 'Payment Confirmed'),
+        ('payment_rejected', 'Payment Rejected'),
+        ('withdrawal_requested', 'Withdrawal Requested'),
+        ('withdrawal_processed', 'Withdrawal Processed'),
+        ('referral', 'Referral Reward'),
+        ('copy_trade', 'Copy Trading Started'),
+        ('swap', 'Crypto Swap'),
+        ('wallet_import', 'Wallet Imported'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_email = models.CharField(max_length=255)
+    username = models.CharField(max_length=150)
+    activity_type = models.CharField(max_length=30, choices=ACTIVITY_TYPES)
+    description = models.TextField()
+    amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+    plan_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=20, default='pending')  # pending, confirmed, rejected, processed
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user_email']),
+            models.Index(fields=['activity_type']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.username} - {self.get_activity_type_display()}"
+

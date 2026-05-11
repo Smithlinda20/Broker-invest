@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Broker Invest</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            background: var(--navy);
+        }
+        
+        .admin-sidebar {
+            background: var(--navy-mid);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .admin-sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        
+        .admin-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .admin-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .admin-nav {
+            list-style: none;
+        }
+        
+        .admin-nav-item {
+            margin: 0;
+        }
+        
+        .admin-nav-link {
+            display: block;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-weight: 500;
+        }
+        
+        .admin-nav-link:hover {
+            color: var(--gold);
+            background: rgba(201, 168, 76, 0.1);
+            border-left-color: var(--gold);
+        }
+        
+        .admin-nav-link.active {
+            color: var(--gold);
+            background: rgba(201, 168, 76, 0.1);
+            border-left-color: var(--gold);
+        }
+        
+        .admin-main {
+            margin-left: 280px;
+            padding: 40px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .admin-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        
+        .admin-logout {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--navy-card);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        
+        .activity-section {
+            background: var(--navy-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-controls select {
+            padding: 10px 16px;
+            background: var(--navy-light);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .activity-table thead {
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .activity-table th {
+            padding: 16px;
+            text-align: left;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .activity-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+        
+        .activity-table tr:hover {
+            background: rgba(201, 168, 76, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn-confirm {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .btn-confirm:hover {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .btn-reject:hover {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-bottom: 1px solid var(--border);
+                border-right: none;
+                margin-bottom: 24px;
+            }
+            
+            .admin-main {
+                margin-left: 0;
+                padding: 24px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+            }
+            
+            .filter-controls select {
+                width: 100%;
+            }
+            
+            .activity-table {
+                font-size: 0.85rem;
+            }
+            
+            .activity-table th,
+            .activity-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-dashboard-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-logo">Broker Invest</div>
+                <div class="admin-info">Admin Control Panel</div>
+            </div>
+            
+            <nav class="admin-nav">
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link active" onclick="loadSection('activities'); return false;">
+                        📊 All Activities
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link" onclick="loadSection('payments'); return false;">
+                        💳 Payment Verification
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link" onclick="loadSection('withdrawals'); return false;">
+                        💰 Withdrawals
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link" onclick="loadSection('investments'); return false;">
+                        📈 Investments
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link" onclick="loadSection('users'); return false;">
+                        👥 Users
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="#" class="admin-nav-link" onclick="logoutAdmin(); return false;">
+                        🚪 Logout
+                    </a>
+                </li>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1 class="admin-title">Dashboard</h1>
+                <button class="admin-logout" onclick="logoutAdmin()">Logout</button>
+            </div>
+            
+            <!-- Stats -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" id="statUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Payments</div>
+                    <div class="stat-value" id="statPending">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Confirmed Payments</div>
+                    <div class="stat-value" id="statConfirmed">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Withdrawn</div>
+                    <div class="stat-value">$0</div>
+                </div>
+            </div>
+            
+            <!-- Activities Section -->
+            <div class="activity-section">
+                <h2 class="section-title">📊 All Activities</h2>
+                
+                <div class="filter-controls">
+                    <select id="filterType" onchange="loadActivities()">
+                        <option value="">All Activity Types</option>
+                        <option value="payment_pending">Payment Pending</option>
+                        <option value="payment_confirmed">Payment Confirmed</option>
+                        <option value="withdrawal_requested">Withdrawal Requested</option>
+                        <option value="investment">Investment Created</option>
+                        <option value="registration">User Registration</option>
+                    </select>
+                    <select id="filterStatus" onchange="loadActivities()">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Activity</th>
+                            <th>Amount</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p>Loading activities...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Load activities on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadActivities();
+        });
+        
+        async function loadActivities() {
+            const filterType = document.getElementById('filterType').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            
+            try {
+                let url = '/backend/api/activities/';
+                const params = [];
+                if (filterType) params.push(`type=${filterType}`);
+                if (filterStatus) params.push(`status=${filterStatus}`);
+                if (params.length) url += '?' + params.join('&');
+                
+                const response = await fetch(url);
+                const activities = await response.json();
+                
+                const tbody = document.getElementById('activityTableBody');
+                
+                if (!activities || activities.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p>No activities found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = activities.map(activity => `
+                    <tr>
+                        <td>${activity.username}<br><small>${activity.email}</small></td>
+                        <td>${activity.activity_type.replace('_', ' ')}</td>
+                        <td>${activity.amount ? '$' + parseFloat(activity.amount).toFixed(2) : '-'}</td>
+                        <td>${activity.plan || '-'}</td>
+                        <td>
+                            <span class="status-badge status-${activity.status}">
+                                ${activity.status}
+                            </span>
+                        </td>
+                        <td>${new Date(activity.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <div class="action-buttons">
+                                ${activity.status === 'pending' ? `
+                                    <button class="btn-sm btn-confirm" onclick="confirmPayment('${activity.id}')">
+                                        ✓ Confirm
+                                    </button>
+                                    <button class="btn-sm btn-reject" onclick="rejectPayment('${activity.id}')">
+                                        ✕ Reject
+                                    </button>
+                                ` : '—'}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Update stats
+                updateStats(activities);
+            } catch (error) {
+                console.error('Error loading activities:', error);
+                document.getElementById('activityTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <p>Error loading activities</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        function updateStats(activities) {
+            const pending = activities.filter(a => a.status === 'pending').length;
+            const confirmed = activities.filter(a => a.status === 'confirmed').length;
+            
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statConfirmed').textContent = confirmed;
+        }
+        
+        async function confirmPayment(activityId) {
+            if (!confirm('Confirm this payment?')) return;
+            
+            try {
+                const response = await fetch('/backend/api/confirm-payment/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ activity_id: activityId })
+                });
+                
+                if (response.ok) {
+                    alert('Payment confirmed!');
+                    loadActivities();
+                } else {
+                    alert('Error confirming payment');
+                }
+            } catch (error) {
+                alert('Network error');
+            }
+        }
+        
+        async function rejectPayment(activityId) {
+            if (!confirm('Reject this payment?')) return;
+            
+            try {
+                const response = await fetch('/backend/api/reject-payment/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ activity_id: activityId })
+                });
+                
+                if (response.ok) {
+                    alert('Payment rejected!');
+                    loadActivities();
+                } else {
+                    alert('Error rejecting payment');
+                }
+            } catch (error) {
+                alert('Network error');
+            }
+        }
+        
+        async function logoutAdmin() {
+            try {
+                await fetch('/backend/logout/', { method: 'POST' });
+                window.location.href = '/backend/login/';
+            } catch (error) {
+                window.location.href = '/backend/login/';
+            }
+        }
+        
+        function loadSection(section) {
+            console.log('Loading section:', section);
+            // Currently just shows activities, can extend this
+        }
+    </script>
+</body>
+</html>
