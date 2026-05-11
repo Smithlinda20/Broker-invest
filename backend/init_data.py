@@ -123,3 +123,25 @@ for wallet_data in wallets_data:
 
 print("\n✅ Database initialization complete!")
 print("\nReminder: Update Telegram credentials in site settings for alerts to work.")
+
+
+
+from django.contrib.auth.hashers import make_password
+from admin_panel.models import AdminUser
+
+# Create default admin user
+admin_email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
+admin_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', '')
+admin_name = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'Admin')
+
+if admin_email and admin_password:
+    if not AdminUser.objects.filter(email=admin_email).exists():
+        AdminUser.objects.create(
+            email=admin_email,
+            password=make_password(admin_password),
+            name=admin_name,
+            is_active=True
+        )
+        print(f"✅ Admin user created: {admin_email}")
+    else:
+        print(f"⊘ Admin user already exists: {admin_email}")
