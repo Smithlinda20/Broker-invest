@@ -1,7 +1,11 @@
-from django.db import models
-from users.models import UserProfile
+from datetime import timedelta
+from decimal import Decimal
 import uuid
-from datetime import datetime, timedelta
+
+from django.db import models
+from django.utils import timezone
+
+from users.models import UserProfile
 
 class InvestmentPlan(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -38,19 +42,34 @@ class ActiveInvestment(models.Model):
         return f"{self.user.user.username} - {self.plan.name}"
     
     def calculate_earnings(self):
-        """Calculate daily earnings"""
-        now = datetime.now()
-        last_update = self.last_earning_update
-        
-        if (now - last_update).days >= 1:
-            days_passed = (now - last_update).days
-            daily_return = self.amount * (self.plan.daily_return_percentage / 100)
-            new_earnings = daily_return * days_passed
-            self.earned += new_earnings
-            self.last_earning_update = now
-            self.save()
-            return new_earnings
-        return 0
+        """Accrue earnings in exact 24-hour intervals without overpaying past plan end."""
+        now = timezone.now()
+        last_update = self.last_earning_update or self.start_date
+        effective_now = min(now, self.end_date)
+
+        if effective_now <= last_update:
+            if now >= self.end_date and self.status == 'active':
+                self.status = 'completed'
+                self.save(update_fields=['status'])
+            return Decimal('0.00')
+
+        completed_periods = int((effective_now - last_update) // timedelta(hours=24))
+        if completed_periods <= 0:
+            if now >= self.end_date and self.status == 'active':
+                self.status = 'completed'
+                self.save(update_fields=['status'])
+            return Decimal('0.00')
+
+        daily_return = self.amount * (self.plan.daily_return_percentage / Decimal('100'))
+        new_earnings = daily_return * completed_periods
+        self.earned += new_earnings
+        self.last_earning_update = last_update + (timedelta(hours=24) * completed_periods)
+
+        if now >= self.end_date and self.status == 'active':
+            self.status = 'completed'
+
+        self.save(update_fields=['earned', 'last_earning_update', 'status'])
+        return new_earnings
 
 class WithdrawHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -75,6 +94,13 @@ class PaymentConfirmation(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
+    activated_investment = models.OneToOneField(
+        ActiveInvestment,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='payment_confirmation',
+    )
     
     def __str__(self):
         return f"{self.user.user.username} - {self.status}"
@@ -116,6 +142,3 @@ class CryptoSwap(models.Model):
     
     def __str__(self):
         return f"{self.user.user.username} - {self.from_crypto} to {self.to_crypto}"
-    
-    def __str__(self):
-        return f"{self.user.user.username} - {self.amount}"

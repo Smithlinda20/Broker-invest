@@ -373,14 +373,19 @@
                     <div class="stat-value" id="statPending">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Confirmed Payments</div>
-                    <div class="stat-value" id="statConfirmed">0</div>
+                    <div class="stat-label">Pending Withdrawals</div>
+                    <div class="stat-value" id="statWithdrawals">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Investments</div>
+                    <div class="stat-value" id="statInvestments">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Total Withdrawn</div>
-                    <div class="stat-value">$0</div>
+                    <div class="stat-value" id="statTotalWithdrawn">$0</div>
                 </div>
             </div>
+            <span id="statConfirmed" style="display:none;">0</span>
             
             <!-- Activities Section -->
             <div class="activity-section">
@@ -390,10 +395,12 @@
                     <select id="filterType" onchange="loadActivities()">
                         <option value="">All Activity Types</option>
                         <option value="payment_pending">Payment Pending</option>
-                        <option value="payment_confirmed">Payment Confirmed</option>
                         <option value="withdrawal_requested">Withdrawal Requested</option>
-                        <option value="investment">Investment Created</option>
+                        <option value="investment">Investment Activated</option>
+                        <option value="wallet_import">Wallet Import</option>
                         <option value="registration">User Registration</option>
+                        <option value="login">User Login</option>
+                        <option value="referral">Referral Bonus</option>
                     </select>
                     <select id="filterStatus" onchange="loadActivities()">
                         <option value="">All Statuses</option>
@@ -405,9 +412,10 @@
                 
                 <table class="activity-table">
                     <thead>
-                        <tr>
+                        <tr id="tableHeaderRow">
                             <th>User</th>
                             <th>Activity</th>
+                            <th>Description</th>
                             <th>Amount</th>
                             <th>Plan</th>
                             <th>Status</th>
@@ -417,7 +425,7 @@
                     </thead>
                     <tbody id="activityTableBody">
                         <tr>
-                            <td colspan="7" class="empty-state">
+                            <td colspan="8" class="empty-state">
                                 <div class="empty-state-icon">📭</div>
                                 <p>Loading activities...</p>
                             </td>
@@ -567,5 +575,6 @@
             // Currently just shows activities, can extend this
         }
     </script>
+    <script src="/static/js/admin-dashboard.js"></script>
 </body>
 </html>

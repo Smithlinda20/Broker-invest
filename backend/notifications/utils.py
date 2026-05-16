@@ -2,11 +2,20 @@ import requests
 from django.conf import settings
 from admin_panel.models import AdminNotification, PopupNotification, SiteSettings
 
+
+def _is_placeholder(value):
+    return not value or str(value).startswith('YOUR_')
+
+
 def send_telegram_notification(message):
     """Send notification to admin via Telegram"""
     try:
         settings_obj = SiteSettings.objects.first()
-        if not settings_obj or not settings_obj.telegram_bot_token or not settings_obj.telegram_admin_chat_id:
+        if (
+            not settings_obj
+            or _is_placeholder(settings_obj.telegram_bot_token)
+            or _is_placeholder(settings_obj.telegram_admin_chat_id)
+        ):
             return False
         
         url = f"https://api.telegram.org/bot{settings_obj.telegram_bot_token}/sendMessage"
@@ -15,7 +24,7 @@ def send_telegram_notification(message):
             'text': message,
             'parse_mode': 'HTML'
         }
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=data, timeout=10)
         return response.status_code == 200
     except Exception as e:
         print(f"Telegram notification error: {str(e)}")

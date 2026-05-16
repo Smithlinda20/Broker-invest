@@ -28,6 +28,7 @@ class Withdrawal(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     method = models.CharField(max_length=20, choices=[('crypto', 'Crypto'), ('bank', 'Bank Transfer')])
     crypto_type = models.CharField(max_length=10, null=True, blank=True, choices=[('BTC', 'Bitcoin'), ('ETH', 'Ethereum'), ('USDT', 'USDT')])
+    network = models.CharField(max_length=100, null=True, blank=True)
     bank_details = models.JSONField(null=True, blank=True)
     wallet_address = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')

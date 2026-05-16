@@ -2,7 +2,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from admin_panel.views import admin_login_view, admin_dashboard_view, admin_logout_view, admin_api_activities, admin_api_confirm_payment, admin_api_reject_payment
+from admin_panel.views import (
+    admin_api_activities,
+    admin_api_confirm_payment,
+    admin_api_reject_payment,
+    admin_api_summary,
+    admin_api_users,
+    admin_dashboard_view,
+    admin_login_view,
+    admin_logout_view,
+)
 
 urlpatterns = [
     # Frontend pages
@@ -12,6 +21,8 @@ urlpatterns = [
     path('backend/login/', admin_login_view, name='admin_login'),
     path('backend/dashboard/', admin_dashboard_view, name='admin_dashboard'),
     path('backend/logout/', admin_logout_view, name='admin_logout'),
+    path('backend/api/summary/', admin_api_summary, name='admin_api_summary'),
+    path('backend/api/users/', admin_api_users, name='admin_api_users'),
     path('backend/api/activities/', admin_api_activities, name='admin_api_activities'),
     path('backend/api/confirm-payment/', admin_api_confirm_payment, name='admin_api_confirm_payment'),
     path('backend/api/reject-payment/', admin_api_reject_payment, name='admin_api_reject_payment'),

@@ -108,6 +108,12 @@ class ActivityLog(models.Model):
         ('swap', 'Crypto Swap'),
         ('wallet_import', 'Wallet Imported'),
     ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('rejected', 'Rejected'),
+    ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_email = models.CharField(max_length=255)
@@ -116,7 +122,12 @@ class ActivityLog(models.Model):
     description = models.TextField()
     amount = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     plan_name = models.CharField(max_length=100, null=True, blank=True)
-    status = models.CharField(max_length=20, default='pending')  # pending, confirmed, rejected, processed
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    entity_id = models.CharField(max_length=64, null=True, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.CharField(max_length=200, null=True, blank=True)
+    admin_note = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -125,6 +136,7 @@ class ActivityLog(models.Model):
             models.Index(fields=['user_email']),
             models.Index(fields=['activity_type']),
             models.Index(fields=['status']),
+            models.Index(fields=['entity_id']),
         ]
     
     def __str__(self):

@@ -53,6 +53,15 @@
           <span class="field-hint" id="usernameHint" style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;display:none;">Min 3 characters, letters and numbers only</span>
         </div>
 
+        <div class="form-group">
+          <label for="email">Email Address <span style="color:var(--text-muted);font-weight:400;">(Recommended)</span></label>
+          <div class="input-icon-group">
+            <span class="input-icon">📧</span>
+            <input type="email" id="email" placeholder="Enter your email for password recovery" autocomplete="email">
+          </div>
+          <span style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;display:block;">Used for account recovery and admin records.</span>
+        </div>
+
         <!-- Password -->
         <div class="form-group">
           <label for="password">Password <span style="color:var(--danger)">*</span></label>
@@ -186,6 +195,11 @@
       setInterval(rotateTicker, 4000);
     }, 600);
 
+    const referralParam = new URLSearchParams(window.location.search).get('ref');
+    if (referralParam) {
+      document.getElementById('referralCode').value = referralParam.toUpperCase();
+    }
+
     // Password strength checker
     function checkPasswordStrength(val) {
       const bar = document.getElementById('strengthBar');
@@ -249,6 +263,7 @@
       e.preventDefault();
       const btn = document.getElementById('registerBtn');
       const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const pin = document.getElementById('pin').value;
       const referralCode = document.getElementById('referralCode').value.trim();
@@ -275,6 +290,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             username,
+            email,
             password,
             transaction_pin: pin,
             referral_code: referralCode || null

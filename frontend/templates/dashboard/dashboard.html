@@ -436,15 +436,19 @@
 
               <!-- Wallet display -->
               <div id="walletDisplay" class="wallet-display hidden">
-                <h3>Send Payment To This Address:</h3>
+                <h3>Your Receiving Wallet</h3>
                 <div class="wallet-info">
                   <p><strong style="color:var(--text-primary);">Currency:</strong> <span id="walletCurrency" style="color:var(--gold);font-weight:600;"></span></p>
                   <p><strong style="color:var(--text-primary);">Network:</strong> <span id="walletNetwork"></span></p>
+                  <div class="form-group" style="margin-bottom:1rem;">
+                    <label>Network</label>
+                    <input type="text" id="withdrawNetwork" placeholder="Enter network e.g. ERC20, TRC20, BEP20">
+                  </div>
                   <div class="wallet-address-box">
-                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;"><strong>Wallet Address:</strong></p>
+                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px;"><strong>Destination Wallet Address:</strong></p>
                     <div class="address-input">
-                      <input type="text" id="walletAddress" readonly>
-                      <button type="button" class="btn-copy" onclick="copyWalletAddress()">Copy</button>
+                      <input type="text" id="walletAddress" placeholder="Paste your wallet address">
+                      <button type="button" class="btn-copy" onclick="copyWalletAddress()">Paste</button>
                     </div>
                   </div>
                 </div>

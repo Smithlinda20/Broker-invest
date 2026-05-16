@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import AdminNotification, PaymentWallet, SiteSettings, PopupNotification
+
+from .models import ActivityLog, AdminNotification, PaymentWallet, PopupNotification, SiteSettings
 
 class AdminNotificationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +10,7 @@ class AdminNotificationSerializer(serializers.ModelSerializer):
 class PaymentWalletSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentWallet
-        fields = ['id', 'crypto_type', 'wallet_address', 'network', 'is_active']
+        fields = ['id', 'crypto_type', 'wallet_address', 'network', 'logo_url', 'qr_code', 'is_active']
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,3 +21,24 @@ class PopupNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PopupNotification
         fields = ['id', 'username', 'amount', 'created_at']
+
+
+class ActivityLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivityLog
+        fields = [
+            'id',
+            'user_email',
+            'username',
+            'activity_type',
+            'description',
+            'amount',
+            'plan_name',
+            'status',
+            'entity_id',
+            'metadata',
+            'reviewed_at',
+            'reviewed_by',
+            'admin_note',
+            'created_at',
+        ]

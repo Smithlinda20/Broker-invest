@@ -119,6 +119,7 @@
         const response = await fetch('/api/users/users/login/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
           body: JSON.stringify({ username, password })
         });
 
@@ -217,6 +218,7 @@
         const response = await fetch('/api/users/users/verify/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
           body: JSON.stringify({ username, email })
         });
         
@@ -235,9 +237,10 @@
           }
           
           // Send password reset
-          const resetResponse = await fetch('/api/users/users/reset-password/', {
+          const resetResponse = await fetch('/api/users/users/reset_password/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
             body: JSON.stringify({ username, email, new_password: newPassword })
           });
           
